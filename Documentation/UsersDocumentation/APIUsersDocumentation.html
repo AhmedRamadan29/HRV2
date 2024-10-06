@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,14 +32,22 @@
 
 <div class="section">
     <h2>Database Schema</h2>
-    <h3>Table: system_users</h3>
-    <pre><code>CREATE TABLE system_users (
+    <h3>Table: users</h3>
+    <pre><code>CREATE TABLE users (
   id INT NOT NULL AUTO_INCREMENT,
-  userid INT DEFAULT NULL,
-  role VARCHAR(255) DEFAULT NULL,
+  isactivated TINYINT(1) NOT NULL,
+  status TINYINT(1) NOT NULL,
+  email VARCHAR(100) DEFAULT NULL,
+  createddate DATE DEFAULT NULL,
+  password VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (id)
-);</code></pre>
-    <p>This table stores the system users with their IDs, roles, and user identifiers.</p>
+)
+ENGINE = INNODB,
+AUTO_INCREMENT = 21,
+CHARACTER SET utf8mb4,
+COLLATE utf8mb4_0900_ai_ci,
+ROW_FORMAT = DYNAMIC;</code></pre>
+    <p>This table stores the users with their IDs, activation state, status, email, creation date, and password.</p>
 </div>
 
 <div class="section">
@@ -60,26 +68,27 @@ import java.util.Date;
 public class User {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
-    @Column(name = "email")
+    @Column(name = "email", length = 100)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 255)
     private String password;
 
     @Column(name = "createddate")
+    @Temporal(TemporalType.DATE)
     private Date createdDate;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private boolean status;
 
-    @Column(name = "isactivated")
+    @Column(name = "isactivated", nullable = false)
     private boolean isActivated;
 }</code></pre>
-    <p>This class maps to the <strong>users</strong> table in the database and contains fields for ID, email, password, status, and activation status.</p>
+    <p>This class maps to the <strong>users</strong> table in the database and represents a system user with fields for ID, email, password, creation date, status, and activation state.</p>
 </div>
 
 <div class="section">
@@ -91,8 +100,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.springframework.stereotype.Component;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -102,23 +109,23 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Component
 public class UserDTO {
 
     private int id;
-    @NotBlank(message = "email is mandatory")
-    @NotNull(message = "Add email for user")
+
+    @NotBlank(message = "Email is mandatory")
     private String email;
-    @NotBlank(message = "password is mandatory")
-    @NotNull(message = "Add password for user")
+
+    @NotBlank(message = "Password is mandatory")
     private String password;
-    @NotNull(message = "Add password for user")
-    @PastOrPresent(message = "Publish CreatedDate must be in the past or present")
+
+    @PastOrPresent(message = "Creation date must be in the past or present")
     private Date createdDate;
+
     private boolean status;
     private boolean isActivated;
 }</code></pre>
-    <p>The <strong>UserDTO</strong> class is used to transfer user data between layers in the application.</p>
+    <p>The <strong>UserDTO</strong> class is a Data Transfer Object (DTO) used to transfer user data between different layers of the application.</p>
 </div>
 
 <div class="section">
@@ -137,6 +144,7 @@ public class UserMapper {
                 .id(user.getId())
                 .email(user.getEmail())
                 .password(user.getPassword())
+                .createdDate(user.getCreatedDate())
                 .status(user.isStatus())
                 .isActivated(user.isActivated())
                 .build();
@@ -147,12 +155,13 @@ public class UserMapper {
         user.setId(userDTO.getId());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
+        user.setCreatedDate(userDTO.getCreatedDate());
         user.setStatus(userDTO.isStatus());
         user.setActivated(userDTO.isActivated());
         return user;
     }
 }</code></pre>
-    <p>The <strong>UserMapper</strong> class is responsible for converting between <strong>User</strong> entities and <strong>UserDTO</strong> objects.</p>
+    <p>The <strong>UserMapper</strong> class is responsible for converting between <strong>User</strong> entities and <strong>UserDTO</strong> objects, making it easier to work with data at different layers.</p>
 </div>
 
 <div class="section">
@@ -164,16 +173,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository&lt;User, Integer&gt; {
+public interface UserRepository extends JpaRepository<User, Integer> {
 }</code></pre>
-    <p>The <strong>UserRepository</strong> interface extends <code>JpaRepository</code> and provides basic CRUD operations for the <strong>User</strong> entity.</p>
+    <p>The <strong>UserRepository</strong> interface extends <code>JpaRepository</code> to provide basic CRUD operations for the <strong>User</strong> entity.</p>
 </div>
 
 <div class="section">
     <h2>Service: UserService</h2>
     <pre><code>package HRComponents.Services;
 
-import HRComponents.AbstractionImp.CRUDImp.CRUDServiceMethod;
 import HRComponents.DTOs.UserDTO;
 import HRComponents.Entitys.User;
 import HRComponents.Mapper.UserMapper;
@@ -181,46 +189,40 @@ import HRComponents.Repostorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public CRUDServiceMethod.GetAll<UserDTO> getAll = () ->
-        userRepository.findAll()
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll()
                 .stream()
                 .map(UserMapper::toDTO)
                 .collect(Collectors.toList());
+    }
 
-    public CRUDServiceMethod.Create<UserDTO> create = (users) -> {
-        List&lt;User&gt; userEntities = users.stream()
+    @Transactional
+    public List<UserDTO> addUsers(List<UserDTO> users) {
+        List<User> userEntities = users.stream()
                 .map(UserMapper::toEntity)
                 .collect(Collectors.toList());
+
         return userRepository.saveAll(userEntities)
                 .stream()
                 .map(UserMapper::toDTO)
                 .collect(Collectors.toList());
-    };
-
-    @Transactional
-    public List&lt;UserDTO&gt; saveUsers(List&lt;UserDTO&gt; users) {
-        return create.create(users);
     }
-}
-                 @PatchMapping("AddUsers")
-    public ResponseEntity<List<UserDTO>>addUsers(@RequestBody List<UserDTO> users) {
-        return new ResponseEntity<>(userService.create.create(users), HttpStatus.CREATED);
-    }
-    </code></pre>
-    <p>The <strong>UserService</strong> provides business logic for handling user data operations such as retrieving and creating users.</p>
+}</code></pre>
+    <p>The <strong>UserService</strong> class provides business logic for managing user operations such as retrieving all users and adding new ones.</p>
 </div>
 
 <div class="section">
@@ -235,14 +237,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/API/users")
 @CrossOrigin(origins = "*")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -250,26 +251,121 @@ public class UserController {
     }
 
     @GetMapping("/GetAllUsers")
-    public ResponseEntity<?> getAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int pageSize) {
-        List&lt;UserDTO&gt; users = userService.getAll.get();
+    public ResponseEntity<List<UserDTO>> getAllUsers(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "10") int pageSize) {
+        List<UserDTO> users = userService.getAllUsers();
         if (users == null || users.isEmpty()) {
-            return new ResponseEntity&lt;&gt;("Users Not found or null", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No users found", HttpStatus.NOT_FOUND);
         }
-        List&lt;UserDTO&gt; pageUsers = users.stream()
+
+        List<UserDTO> pagedUsers = users.stream()
                 .skip((long) page * pageSize)
                 .limit(pageSize)
-                .collect(Collectors.toList());
-        return new ResponseEntity&lt;&gt;(pageUsers, HttpStatus.FOUND);
+                .toList();
+
+        return new ResponseEntity<>(pagedUsers, HttpStatus.OK);
     }
 
-    @PatchMapping("AddUsers")
-    public ResponseEntity&lt;List&lt;UserDTO&gt;&gt; addUsers(@RequestBody List&lt;UserDTO&gt; users) {
-        return new ResponseEntity&lt;&gt;(userService.create.create(users), HttpStatus.CREATED);
+    @PostMapping("/AddUsers")
+    public ResponseEntity<List<UserDTO>> addUsers(@RequestBody List<UserDTO> users) {
+        if (users == null || users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        List<UserDTO> createdUsers = userService.addUsers(users);
+        return new ResponseEntity<>(createdUsers, HttpStatus.CREATED);
     }
 }</code></pre>
-    <p>The <strong>UserController</strong> handles HTTP requests for user operations such as retrieving all users and adding new users.</p>
+    <p>The <strong>UserController</strong> handles HTTP requests for user-related operations such as retrieving and adding users.</p>
+</div>
+<div class="section">
+    <h2>API Endpoints</h2>
+    <p>Below are the available API endpoints for managing users:</p>
+
+    <h3>1. Get All Users</h3>
+    <p><strong>Endpoint:</strong> <code>GET /API/users/GetAllUsers</code></p>
+    <p>This endpoint retrieves all users, with optional pagination parameters.</p>
+    <ul>
+        <li><strong>Query Parameters:</strong></li>
+        <ul>
+            <li><code>page</code> (optional) - Default value: 0. The page number to retrieve.</li>
+            <li><code>pageSize</code> (optional) - Default value: 10. The number of users per page.</li>
+        </ul>
+        <li><strong>Response:</strong> A paginated list of users.</li>
+    </ul>
+    <pre><code>
+    GET /API/users/GetAllUsers?page=0&pageSize=10
+
+    Response:
+    [
+        {
+            "id": 1,
+            "email": "user1@example.com",
+            "password": "hashed_password",
+            "createdDate": "2024-10-01",
+            "status": true,
+            "isActivated": true
+        },
+        {
+            "id": 2,
+            "email": "user2@example.com",
+            "password": "hashed_password",
+            "createdDate": "2024-10-01",
+            "status": false,
+            "isActivated": false
+        }
+    ]
+    </code></pre>
+
+    <h3>2. Add Users</h3>
+    <p><strong>Endpoint:</strong> <code>POST /API/users/AddUsers</code></p>
+    <p>This endpoint allows you to add one or more users to the system.</p>
+    <ul>
+        <li><strong>Request Body:</strong> A JSON array of <code>UserDTO</code> objects representing the users to be added.</li>
+        <li><strong>Response:</strong> The list of created users.</li>
+    </ul>
+    <pre><code>
+    POST /API/users/AddUsers
+
+    Request Body:
+    [
+        {
+            "email": "newuser1@example.com",
+            "password": "new_password",
+            "createdDate": "2024-10-01",
+            "status": true,
+            "isActivated": true
+        },
+        {
+            "email": "newuser2@example.com",
+            "password": "new_password",
+            "createdDate": "2024-10-01",
+            "status": false,
+            "isActivated": false
+        }
+    ]
+
+    Response:
+    [
+        {
+            "id": 21,
+            "email": "newuser1@example.com",
+            "password": "hashed_password",
+            "createdDate": "2024-10-01",
+            "status": true,
+            "isActivated": true
+        },
+        {
+            "id": 22,
+            "email": "newuser2@example.com",
+            "password": "hashed_password",
+            "createdDate": "2024-10-01",
+            "status": false,
+            "isActivated": false
+        }
+    ]
+    </code></pre>
 </div>
 
 </body>
 </html>
- 

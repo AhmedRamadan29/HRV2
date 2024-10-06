@@ -1,7 +1,7 @@
 package HRComponents.Services;
-import HRComponents.AbstractionImp.CRUDImp.CRUDServiceMethod;
+import HRComponents.AbstractionImp.CRUDImp.CRUDUsersServiceMethod;
 import HRComponents.DTOs.UserDTO;
-import HRComponents.Entitys.User;
+
 import HRComponents.Mapper.UserMapper;
 import HRComponents.Repostorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserService implements CRUDUsersServiceMethod {
 
     private UserRepository userRepository;
 
@@ -19,27 +19,21 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+@Override
+public List<UserDTO> getAll () {return userRepository.findAll().stream().map(UserMapper::toDTO).collect(Collectors.toList());}
 
-
-    public CRUDServiceMethod.GetAll<UserDTO> getAll = () ->
-            userRepository.findAll()
-                    .stream()
-                    .map(UserMapper::toDTO)
-                    .collect(Collectors.toList());
-
-
-    public CRUDServiceMethod.Create<UserDTO> create = (users) -> {
-        List<User> userEntities = users.stream()
-                .map(UserMapper::toEntity)
-                .collect(Collectors.toList());
-        return userRepository.saveAll(userEntities)
-                .stream()
-                .map(UserMapper::toDTO)
-                .collect(Collectors.toList());
-    };
-
+        /**
+     * Creates new user records in the database.
+     *
+     * @param users a list of UserDTO objects representing the users to be created.
+     * @return a list of UserDTO objects representing the newly created users.
+     */
+    @Override
     @Transactional
-    public List<UserDTO> saveUsers(List<UserDTO> users) {
-        return create.create(users);
+    public List<UserDTO> create(List<UserDTO> users) {
+        return userRepository.saveAll(users.stream().map(UserMapper::toEntity).collect(Collectors.toList())).stream().map(UserMapper::toDTO).collect(Collectors.toList());
     }
+
+
+
 }

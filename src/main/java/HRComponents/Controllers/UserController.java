@@ -1,4 +1,5 @@
 package HRComponents.Controllers;
+
 import HRComponents.DTOs.UserDTO;
 import HRComponents.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +20,20 @@ public class UserController {
     public UserController(UserService userService) {this.userService = userService;}
     @GetMapping("/GetAllUsers")
     public ResponseEntity<?> getallUsers(@RequestParam(defaultValue ="0") int page , @RequestParam(defaultValue="10") int pageSize ) {
-        List<UserDTO> users = userService.getAll.get();
+        List<UserDTO> users = userService.getAll();
        if (users == null || users.isEmpty() ){return new ResponseEntity<>("Users  Not found or  null ", HttpStatus.NOT_FOUND);}
        List<UserDTO> PageUsers =users.stream().skip((long) page * pageSize).limit(pageSize).collect(Collectors.toList());
         return new  ResponseEntity<>(PageUsers , HttpStatus.FOUND );}
 
 
-    @PatchMapping("AddUsers")
-    public  ResponseEntity <List<UserDTO>> addUsers(@RequestBody List<UserDTO> users){
+    @PostMapping("AddUsers")
+    public ResponseEntity<List<UserDTO>> addUsers(@RequestBody List<UserDTO> users) {
+        if (users == null || users.isEmpty()) {
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
+        }
 
-
-
-return new  ResponseEntity<>(userService.create.create(users) ,HttpStatus.CREATED );
+        return new ResponseEntity<>(userService.create(users), HttpStatus.CREATED);
     }
-
 
 
 }
