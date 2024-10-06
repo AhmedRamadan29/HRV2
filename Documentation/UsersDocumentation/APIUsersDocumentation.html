@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API & Database Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, monospace;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+<h1>API & Database Documentation</h1>
+
+<div class="section">
+    <h2>Database Schema</h2>
+    <h3>Table: system_users</h3>
+    <pre><code>CREATE TABLE system_users (
+  id INT NOT NULL AUTO_INCREMENT,
+  userid INT DEFAULT NULL,
+  role VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (id)
+);</code></pre>
+    <p>This table stores the system users with their IDs, roles, and user identifiers.</p>
+</div>
+
+<div class="section">
+    <h2>Entity: User</h2>
+    <h3>Java Entity Class</h3>
+    <pre><code>package HRComponents.Entitys;
+
+import jakarta.persistence.*;
+import lombok.*;
+import java.util.Date;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Table(name = "users")
+@Entity
+@Builder
+public class User {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "createddate")
+    private Date createdDate;
+
+    @Column(name = "status")
+    private boolean status;
+
+    @Column(name = "isactivated")
+    private boolean isActivated;
+}</code></pre>
+    <p>This class maps to the <strong>users</strong> table in the database and contains fields for ID, email, password, status, and activation status.</p>
+</div>
+
+<div class="section">
+    <h2>DTO: UserDTO</h2>
+    <pre><code>package HRComponents.DTOs;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import org.springframework.stereotype.Component;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import java.util.Date;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Component
+public class UserDTO {
+
+    private int id;
+    @NotBlank(message = "email is mandatory")
+    @NotNull(message = "Add email for user")
+    private String email;
+    @NotBlank(message = "password is mandatory")
+    @NotNull(message = "Add password for user")
+    private String password;
+    @NotNull(message = "Add password for user")
+    @PastOrPresent(message = "Publish CreatedDate must be in the past or present")
+    private Date createdDate;
+    private boolean status;
+    private boolean isActivated;
+}</code></pre>
+    <p>The <strong>UserDTO</strong> class is used to transfer user data between layers in the application.</p>
+</div>
+
+<div class="section">
+    <h2>Mapper: UserMapper</h2>
+    <pre><code>package HRComponents.Mapper;
+
+import HRComponents.Entitys.User;
+import HRComponents.DTOs.UserDTO;
+import org.springframework.stereotype.Component;
+
+@Component
+public class UserMapper {
+
+    public static UserDTO toDTO(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .status(user.isStatus())
+                .isActivated(user.isActivated())
+                .build();
+    }
+
+    public static User toEntity(UserDTO userDTO) {
+        User user = new User();
+        user.setId(userDTO.getId());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setStatus(userDTO.isStatus());
+        user.setActivated(userDTO.isActivated());
+        return user;
+    }
+}</code></pre>
+    <p>The <strong>UserMapper</strong> class is responsible for converting between <strong>User</strong> entities and <strong>UserDTO</strong> objects.</p>
+</div>
+
+<div class="section">
+    <h2>Repository: UserRepository</h2>
+    <pre><code>package HRComponents.Repostorys;
+
+import HRComponents.Entitys.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRepository extends JpaRepository&lt;User, Integer&gt; {
+}</code></pre>
+    <p>The <strong>UserRepository</strong> interface extends <code>JpaRepository</code> and provides basic CRUD operations for the <strong>User</strong> entity.</p>
+</div>
+
+<div class="section">
+    <h2>Service: UserService</h2>
+    <pre><code>package HRComponents.Services;
+
+import HRComponents.AbstractionImp.CRUDImp.CRUDServiceMethod;
+import HRComponents.DTOs.UserDTO;
+import HRComponents.Entitys.User;
+import HRComponents.Mapper.UserMapper;
+import HRComponents.Repostorys.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class UserService {
+
+    private UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public CRUDServiceMethod.GetAll<UserDTO> getAll = () ->
+        userRepository.findAll()
+                .stream()
+                .map(UserMapper::toDTO)
+                .collect(Collectors.toList());
+
+    public CRUDServiceMethod.Create<UserDTO> create = (users) -> {
+        List&lt;User&gt; userEntities = users.stream()
+                .map(UserMapper::toEntity)
+                .collect(Collectors.toList());
+        return userRepository.saveAll(userEntities)
+                .stream()
+                .map(UserMapper::toDTO)
+                .collect(Collectors.toList());
+    };
+
+    @Transactional
+    public List&lt;UserDTO&gt; saveUsers(List&lt;UserDTO&gt; users) {
+        return create.create(users);
+    }
+}
+                 @PatchMapping("AddUsers")
+    public ResponseEntity<List<UserDTO>>addUsers(@RequestBody List<UserDTO> users) {
+        return new ResponseEntity<>(userService.create.create(users), HttpStatus.CREATED);
+    }
+    </code></pre>
+    <p>The <strong>UserService</strong> provides business logic for handling user data operations such as retrieving and creating users.</p>
+</div>
+
+<div class="section">
+    <h2>Controller: UserController</h2>
+    <pre><code>package HRComponents.Controllers;
+
+import HRComponents.DTOs.UserDTO;
+import HRComponents.Services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/API/users")
+@CrossOrigin(origins = "*")
+public class UserController {
+
+    private UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/GetAllUsers")
+    public ResponseEntity<?> getAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int pageSize) {
+        List&lt;UserDTO&gt; users = userService.getAll.get();
+        if (users == null || users.isEmpty()) {
+            return new ResponseEntity&lt;&gt;("Users Not found or null", HttpStatus.NOT_FOUND);
+        }
+        List&lt;UserDTO&gt; pageUsers = users.stream()
+                .skip((long) page * pageSize)
+                .limit(pageSize)
+                .collect(Collectors.toList());
+        return new ResponseEntity&lt;&gt;(pageUsers, HttpStatus.FOUND);
+    }
+
+    @PatchMapping("AddUsers")
+    public ResponseEntity&lt;List&lt;UserDTO&gt;&gt; addUsers(@RequestBody List&lt;UserDTO&gt; users) {
+        return new ResponseEntity&lt;&gt;(userService.create.create(users), HttpStatus.CREATED);
+    }
+}</code></pre>
+    <p>The <strong>UserController</strong> handles HTTP requests for user operations such as retrieving all users and adding new users.</p>
+</div>
+
+</body>
+</html>
+ 
