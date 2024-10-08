@@ -21,10 +21,10 @@ public class JobSeeker{
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Users.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "userid" , referencedColumnName = "id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private User user;
+    private Users users;
 
     @Column(name = "firstname")
     private String firstName;

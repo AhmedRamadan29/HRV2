@@ -1,6 +1,11 @@
 package HRComponents.Entitys;
+
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -8,8 +13,7 @@ import java.util.Date;
 @Table(name = "users")
 @Entity
 @Builder
-public class User {
-
+public class Users {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +33,9 @@ public class User {
 
     @Column(name = "isactivated")
     private boolean isActivated;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Privilege_id", referencedColumnName = "Privilege_Role_id", insertable = false, updatable = false)
+    private SystemUser SystemUser;
 
 }

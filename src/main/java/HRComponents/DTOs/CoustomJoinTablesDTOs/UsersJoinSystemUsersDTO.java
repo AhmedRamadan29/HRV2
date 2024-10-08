@@ -1,22 +1,22 @@
-package HRComponents.DTOs;
+package HRComponents.DTOs.CoustomJoinTablesDTOs;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Builder
-@Component
-public class UserDTO {
-    private int id;
+
+public class UsersJoinSystemUsersDTO {
     private String email;
-    private String password;
     private Date createdDate;
+    private String password;
     private boolean status;
     private boolean isActivated;
-
+    private String role;
 }

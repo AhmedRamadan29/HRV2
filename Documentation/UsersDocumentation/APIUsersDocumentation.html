@@ -88,7 +88,7 @@ public class User {
     @Column(name = "isactivated", nullable = false)
     private boolean isActivated;
 }</code></pre>
-    <p>This class maps to the <strong>users</strong> table in the database and represents a system user with fields for ID, email, password, creation date, status, and activation state.</p>
+    <p>This class maps to the <strong>users</strong> table in the database and represents a system users with fields for ID, email, password, creation date, status, and activation state.</p>
 </div>
 
 <div class="section">
@@ -125,7 +125,7 @@ public class UserDTO {
     private boolean status;
     private boolean isActivated;
 }</code></pre>
-    <p>The <strong>UserDTO</strong> class is a Data Transfer Object (DTO) used to transfer user data between different layers of the application.</p>
+    <p>The <strong>UserDTO</strong> class is a Data Transfer Object (DTO) used to transfer users data between different layers of the application.</p>
 </div>
 
 <div class="section">
@@ -139,26 +139,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    public static UserDTO toDTO(User user) {
+    public static UserDTO toDTO(User users) {
         return UserDTO.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .createdDate(user.getCreatedDate())
-                .status(user.isStatus())
-                .isActivated(user.isActivated())
+                .id(users.getId())
+                .email(users.getEmail())
+                .password(users.getPassword())
+                .createdDate(users.getCreatedDate())
+                .status(users.isStatus())
+                .isActivated(users.isActivated())
                 .build();
     }
 
     public static User toEntity(UserDTO userDTO) {
-        User user = new User();
-        user.setId(userDTO.getId());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        user.setCreatedDate(userDTO.getCreatedDate());
-        user.setStatus(userDTO.isStatus());
-        user.setActivated(userDTO.isActivated());
-        return user;
+        User users = new User();
+        users.setId(userDTO.getId());
+        users.setEmail(userDTO.getEmail());
+        users.setPassword(userDTO.getPassword());
+        users.setCreatedDate(userDTO.getCreatedDate());
+        users.setStatus(userDTO.isStatus());
+        users.setActivated(userDTO.isActivated());
+        return users;
     }
 }</code></pre>
     <p>The <strong>UserMapper</strong> class is responsible for converting between <strong>User</strong> entities and <strong>UserDTO</strong> objects, making it easier to work with data at different layers.</p>
@@ -168,7 +168,7 @@ public class UserMapper {
     <h2>Repository: UserRepository</h2>
     <pre><code>package HRComponents.Repostorys;
 
-import HRComponents.Entitys.User;
+import HRComponents.Entitys.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -182,8 +182,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     <h2>Service: UserService</h2>
     <pre><code>package HRComponents.Services;
 
-import HRComponents.DTOs.UserDTO;
-import HRComponents.Entitys.User;
+import HRComponents.DTOs.EntityDTOs.UserDTO;
+import HRComponents.Entitys.Users;
 import HRComponents.Mapper.UserMapper;
 import HRComponents.Repostorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,14 +222,14 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 }</code></pre>
-    <p>The <strong>UserService</strong> class provides business logic for managing user operations such as retrieving all users and adding new ones.</p>
+    <p>The <strong>UserService</strong> class provides business logic for managing users operations such as retrieving all users and adding new ones.</p>
 </div>
 
 <div class="section">
     <h2>Controller: UserController</h2>
     <pre><code>package HRComponents.Controllers;
 
-import HRComponents.DTOs.UserDTO;
+import HRComponents.DTOs.EntityDTOs.UserDTO;
 import HRComponents.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -276,7 +276,7 @@ public class UserController {
         return new ResponseEntity<>(createdUsers, HttpStatus.CREATED);
     }
 }</code></pre>
-    <p>The <strong>UserController</strong> handles HTTP requests for user-related operations such as retrieving and adding users.</p>
+    <p>The <strong>UserController</strong> handles HTTP requests for users-related operations such as retrieving and adding users.</p>
 </div>
 <div class="section">
     <h2>API Endpoints</h2>
