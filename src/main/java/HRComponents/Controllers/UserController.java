@@ -15,7 +15,9 @@ public class UserController {
     private UserService userService;
     private PaginationImplement paginationImplement = PaginationImplement.getInstance();
     @Autowired
-    public UserController(UserService userService) {this.userService = userService;}
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
     /**
      * Retrieves a paginated list of users.
      *
@@ -46,6 +48,4 @@ public class UserController {
     public ResponseEntity<?> GetInfoUsersByPrivate(@PathVariable String PrivateName, @RequestParam(defaultValue = "0") long page, @RequestParam(defaultValue = "2") long pageSize) {
         return new ResponseEntity<>(this.paginationImplement.createPagination(this.userService.getPrivate(PrivateName), page, pageSize), HttpStatus.FOUND);
     }
-
-
 }
