@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,4 +29,5 @@ public class Users {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Privilege_id", referencedColumnName = "Privilege_Role_id", insertable = false, updatable = false)
     private SystemUser SystemUser;
+
 }

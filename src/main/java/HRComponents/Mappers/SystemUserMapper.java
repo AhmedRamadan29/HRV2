@@ -1,4 +1,4 @@
-package HRComponents.Mapper.MapperEntitys;
+package HRComponents.Mappers;
 import HRComponents.DTOs.EntityDTOs.SystemUserDTO;
 import HRComponents.Entitys.SystemUser;
 import org.springframework.stereotype.Component;

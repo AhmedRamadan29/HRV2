@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,9 +18,6 @@ public class UsersJoinSystemUsersDTO {
     private boolean isActivated;
     private String role;
     public UsersJoinSystemUsersDTO(boolean activated, Date createdDate, boolean status, String role) {
-        this.isActivated = activated;
-        this.createdDate = createdDate;
-        this.status = status;
-    }
+        this.isActivated = activated; this.createdDate = createdDate; this.status = status;}
 }
 

@@ -1,4 +1,4 @@
-package HRComponents.Mapper.MapperEntitys;
+package HRComponents.Mappers;
 import HRComponents.DTOs.EntityDTOs.UserDTO;
 import HRComponents.Entitys.Users;
 import org.springframework.stereotype.Component;
@@ -22,4 +22,7 @@ public class UserMapper {
     public static Users toEntity(UserDTO userDTO) {
         return Users.builder().id(userDTO.getId()).email(userDTO.getEmail()).password(userDTO.getPassword()).createdDate(userDTO.getCreatedDate()).status(userDTO.isStatus()).isActivated(userDTO.isActivated()).build();
     }
+
+
+
 }

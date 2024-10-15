@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/API/users")
 @CrossOrigin(origins = "*")
@@ -15,9 +17,7 @@ public class UserController {
     private UserService userService;
     private PaginationImplement paginationImplement = PaginationImplement.getInstance();
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    public UserController(UserService userService) {this.userService = userService;}
     /**
      * Retrieves a paginated list of users.
      *
@@ -44,8 +44,22 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(this.userService.create(users), HttpStatus.CREATED);
     }
-    @GetMapping("/GetUsersByPrivate/{PrivateName}")
-    public ResponseEntity<?> GetInfoUsersByPrivate(@PathVariable String PrivateName, @RequestParam(defaultValue = "0") long page, @RequestParam(defaultValue = "2") long pageSize) {
-        return new ResponseEntity<>(this.paginationImplement.createPagination(this.userService.getPrivate(PrivateName), page, pageSize), HttpStatus.FOUND);
-    }
+    /**
+ * Retrieves a paginated list of users based on their private name.
+ *
+ * @param PrivateName The private name of the users to retrieve.
+ * @param page        The page number to retrieve (default is 0).
+ * @param pageSize    The number of users per page (default is 2).
+ * @return A ResponseEntity containing a list of UserDTO objects for the specified private name, page, and page size.
+ * If no users are found or the list is null, a ResponseEntity with a NOT_FOUND status is returned.
+ */
+@GetMapping("/GetUsersByPrivate/{PrivateName}")
+public ResponseEntity<?> GetInfoUsersByPrivate(@PathVariable String PrivateName, @RequestParam(defaultValue = "0") long page, @RequestParam(defaultValue = "2") long pageSize) {
+    return new ResponseEntity<>(this.paginationImplement.createPagination(this.userService.getPrivate(PrivateName), page, pageSize), HttpStatus.FOUND);
+}
+
+    @GetMapping("/GetInfoUsersRroles/{role}")
+    public ResponseEntity<?>  getUserIsActive (@PathVariable String role, @RequestParam(defaultValue="0") long page, @RequestParam(defaultValue = "2") long pageSize) {
+        return  new ResponseEntity<>(this.paginationImplement. createPagination(this.userService.getUserIsActive(role), page, pageSize) , HttpStatus.FOUND);}
+
 }

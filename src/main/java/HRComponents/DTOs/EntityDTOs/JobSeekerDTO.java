@@ -4,17 +4,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.util.Date;
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Builder
 @Component
-public class UserDTO {
+public class JobSeekerDTO {
     private int id;
-    private String email;
-    private String password;
-    private Date createdDate;
-    private boolean status;
-    private boolean isActivated;
+    private String firstName;
+    private String lastName;
+    private int birthDate;
+    private long nationalityId;
+    private String linkedInAccount;
+    private String githubAccount;
+    private String info;
 }
