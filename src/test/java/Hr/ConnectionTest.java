@@ -1,14 +1,11 @@
 package Hr;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
 @SpringBootTest
-class HrApplicationTests {
+public class ConnectionTest {
 
-	@Test
-	void contextLoads() {
-	}
-
-
+    @Test
+    void contextLoads() {
+    }
 
 }
