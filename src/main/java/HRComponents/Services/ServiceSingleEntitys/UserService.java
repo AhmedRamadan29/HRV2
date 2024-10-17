@@ -14,8 +14,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 @Service
 public class UserService implements CRUDUsersServiceMethod{
-    private final UserRepository userRepository;
-    private final SystemUserRepository systemUserRepository;
+    protected final UserRepository userRepository;
+    protected final SystemUserRepository systemUserRepository;
     @Autowired
     public UserService(UserRepository userRepository,SystemUserRepository systemUserRepository){
         this.userRepository=userRepository;

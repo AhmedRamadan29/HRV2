@@ -17,7 +17,6 @@ public class UsersJoinSystemUsersDTO {
     private boolean status;
     private boolean isActivated;
     private String role;
-    public UsersJoinSystemUsersDTO(boolean activated, Date createdDate, boolean status, String role) {
-        this.isActivated = activated; this.createdDate = createdDate; this.status = status;}
+
 }
 

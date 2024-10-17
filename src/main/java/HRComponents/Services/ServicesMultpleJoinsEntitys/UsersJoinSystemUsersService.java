@@ -7,22 +7,16 @@ import HRComponents.Mappers.MappersEntityes.SystemUserMapper;
 import HRComponents.Mappers.MappersEntityes.UserMapper;
 import HRComponents.Repostorys.SystemUserRepository;
 import HRComponents.Repostorys.UserRepository;
+import HRComponents.Services.ServiceSingleEntitys.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 @Service
-public class UsersJoinSystemUsersService implements UsersJoinSystemUsersMethod{
-
-    private final UserRepository userRepository;
-    private final SystemUserRepository systemUserRepository;
+public class UsersJoinSystemUsersService extends UserService implements UsersJoinSystemUsersMethod{
     @Autowired
-    public UsersJoinSystemUsersService(UserRepository userRepository,SystemUserRepository systemUserRepository){
-        this.userRepository=userRepository;
-        this.systemUserRepository=systemUserRepository;
-    }
+    public UsersJoinSystemUsersService(UserRepository userRepository,SystemUserRepository systemUserRepository){super(userRepository,systemUserRepository);}
     /**
      * Retrieves a list of users joined with system users based on a specified private name.
      *

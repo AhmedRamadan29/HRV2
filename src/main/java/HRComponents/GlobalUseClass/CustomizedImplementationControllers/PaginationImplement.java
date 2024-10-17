@@ -2,6 +2,7 @@ package HRComponents.GlobalUseClass.CustomizedImplementationControllers;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
 public class PaginationImplement<T> implements Cloneable {
     private static PaginationImplement<?> paginationImplement = null;
     private PaginationImplement() {

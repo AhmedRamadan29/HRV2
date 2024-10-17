@@ -1,5 +1,6 @@
 package HRComponents.Controllers;
 import HRComponents.AbstractionImp.CRUDImpService.CRUDImpServiceJoinsEntitys.UsersJoinSystemUsersMethod;
+import HRComponents.AbstractionImp.CRUDImpService.CRUDImpServiceSingleEntity.CRUDUsersServiceMethod;
 import HRComponents.DTOs.EntitysDTOs.UserDTO;
 import HRComponents.GlobalUseClass.CustomizedImplementationControllers.PaginationImplement;
 import HRComponents.Services.ServiceSingleEntitys.UserService;
@@ -19,14 +20,11 @@ import java.util.List;
 @RequestMapping("/API/users")
 @CrossOrigin(origins = "*")
 public class UserController {
-    private UserService userService;
+    private CRUDUsersServiceMethod  CRUDUsersServiceMethod;
     private UsersJoinSystemUsersMethod UsersJoinSystemUsers;
-    private PaginationImplement paginationImplement = PaginationImplement.getInstance();
+    private PaginationImplement paginationImplement ;
     @Autowired
-    public UserController(UserService userService , UsersJoinSystemUsersMethod UsersJoinSystemUsers)
-    {this.userService = userService;
-    this. UsersJoinSystemUsers = UsersJoinSystemUsers;
-    }
+    public UserController(CRUDUsersServiceMethod userService , UsersJoinSystemUsersMethod UsersJoinSystemUsers ){this.CRUDUsersServiceMethod = userService;this. UsersJoinSystemUsers = UsersJoinSystemUsers;}
     /**
      * Retrieves a paginated list of users.
      *
@@ -37,7 +35,7 @@ public class UserController {
      */
     @GetMapping("/GetAllUsers")
     public ResponseEntity<?> getallUsers(@RequestParam(defaultValue = "0") long page, @RequestParam(defaultValue = "10") long pageSize) {
-        return new ResponseEntity<>(this.paginationImplement.createPagination(this.userService.getAll(), page, pageSize), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.paginationImplement.createPagination(this.CRUDUsersServiceMethod.getAll(), page, pageSize), HttpStatus.FOUND);
     }
     /**
      * Adds a list of users to the system.
@@ -51,7 +49,7 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> addUsers(@RequestBody List<UserDTO> users) {
         if (users == null || users.isEmpty())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(this.userService.create(users), HttpStatus.CREATED);
+        return new ResponseEntity<>(this.CRUDUsersServiceMethod.create(users), HttpStatus.CREATED);
     }
     /**
  * Retrieves a paginated list of users based on their private name.

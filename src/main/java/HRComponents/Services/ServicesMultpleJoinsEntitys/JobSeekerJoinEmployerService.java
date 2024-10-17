@@ -7,19 +7,15 @@ import HRComponents.Repostorys.EmployerDaoRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 @Service
 public class JobSeekerJoinEmployerService implements JobSeekerJoinEmployerServiceMethod{
-    private final EmployerDaoRepository employerDaoRepository;
-    private final ExecutorServiceGlobal executorService;
+   protected final EmployerDaoRepository employerDaoRepository;
+    protected final ExecutorServiceGlobal executorService;
     private CopyOnWriteArrayList<JobSeekerJoinEmployerDTO> jobSeekerJoinEmployerDTOS;
     @Autowired
-    public JobSeekerJoinEmployerService(EmployerDaoRepository employerDaoRepository,ExecutorServiceGlobal executorService){
-        this.executorService=executorService;
-        this.employerDaoRepository=employerDaoRepository;
-    }
+    public JobSeekerJoinEmployerService(EmployerDaoRepository employerDaoRepository,ExecutorServiceGlobal executorService){this.executorService=executorService;this.employerDaoRepository=employerDaoRepository;}
     @SneakyThrows
     @Override
     public CopyOnWriteArrayList<JobSeekerJoinEmployerDTO> getAll(){
