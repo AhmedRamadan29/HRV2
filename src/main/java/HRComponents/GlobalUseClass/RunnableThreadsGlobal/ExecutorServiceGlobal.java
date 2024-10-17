@@ -1,6 +1,9 @@
 package HRComponents.GlobalUseClass.RunnableThreadsGlobal;
 import HRComponents.Exceptions.PublicLocalException;
+import HRComponents.Exceptions.ThreadExceptionHandel;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Component;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -11,39 +14,48 @@ public class ExecutorServiceGlobal{
     private ExecutorService executorService;
     private ExecutorService CurrentThread;
     private ReentrantLock reentrantLock;
+    private boolean boundsTime;
+    private boolean checkTerminated;
+    private StopWatch stopWatch;
     /**
-     This function creates a fixed thread pool with the specified number of threads.
-     If the thread pool is already created and not shutdown, it will be shut down and a new one will be created.
-     @param countThreads The number of threads to be created in the thread pool.
-     @throws IllegalStateException If an unexpected value is encountered while determining the state of the thread pool.
+     This function is responsible for creating a specified number of threads using an ExecutorService.
+     It also handles the termination of the ExecutorService and logs any exceptions
+     that occur during the shutdown process.
+     @param countThreads The number of threads to create.
+     @throws InterruptedException If the current thread is interrupted while waiting for the ExecutorService to terminate.
      */
-    public void createThreads(int countThreads){
-        if(executorService!=null&&!executorService.isShutdown()){
-            executorService.shutdownNow();
-        }
-        this.StateTerminatedThreads=(executorService!=null&&executorService.isTerminated())?0:1;
-        this.CurrentThread=switch(StateTerminatedThreads){
-            case 0 -> Executors.newFixedThreadPool(countThreads);
-            case 1 -> {
-                assert executorService!=null;
-                executorService.shutdownNow();
-                yield Executors.newFixedThreadPool(countThreads);
+    public void createThreads(int countThreads) throws InterruptedException{
+        this.boundsTime=executorService.awaitTermination(500,TimeUnit.MILLISECONDS);
+        this.checkTerminated=executorService.isTerminated();
+        if((executorService!=null)&&!(executorService.isShutdown())){
+            if(!checkTerminated){
+                stopWatch.start();
+                assert boundsTime:executorService.shutdownNow();
+                stopWatch.stop();
+                new ThreadExceptionHandel(Thread.currentThread().getId(),Thread.currentThread().getName(),stopWatch.getTime()).getResult().forEach(System.out::println);
             }
-            default -> throw new IllegalStateException("Unexpected value: "+StateTerminatedThreads);
-        };
-        this.executorService=CurrentThread;
+        }
+        this.StateTerminatedThreads=((executorService==null)&&(executorService.isShutdown())&&(this.checkTerminated))?0:1;
+        switch(StateTerminatedThreads){
+        case 0 -> Executors.newFixedThreadPool(countThreads);
+        case 1 -> {
+            stopWatch.start();
+            assert executorService!=null:boundsTime;
+            assert boundsTime:executorService.shutdownNow();
+            assert !checkTerminated:executorService.shutdownNow();
+            stopWatch.stop();
+            new ThreadExceptionHandel(Thread.currentThread().getId(),Thread.currentThread().getName(),stopWatch.getTime()).getResult().forEach(System.out::println);
+            assert executorService.isShutdown():checkTerminated;
+        }
+        default -> throw new IllegalStateException("Unexpected value: "+StateTerminatedThreads);
+        }
     }
     /**
-     Executes the given task using the ExecutorService.
+     Executes a given task using the ExecutorService.
+     If the ExecutorService is not valid (i.e., it is null or shutdown),
+     a PublicLocalException is thrown.
      @param task The Runnable task to be executed.
-     @throws PublicLocalException If the ExecutorService is not valid or has been shutdown.
-     <p>
-     This function submits the given task to the ExecutorService for execution.
-     If the ExecutorService is not valid (i.e., it is null or has been shutdown),
-     a PublicLocalException is thrown with an appropriate error message.
-     <p>
-     The error message includes the current thread's ID and name,
-     as well as a suggestion to check the thread connection or initialize a new thread.
+     @throws PublicLocalException If the ExecutorService is not valid.
      */
     public void executeTask(Runnable task) throws PublicLocalException{
         if(executorService!=null&&!executorService.isShutdown()){
@@ -53,18 +65,15 @@ public class ExecutorServiceGlobal{
         }
     }
     /**
-     Shuts down the ExecutorService gracefully.
-     @throws PublicLocalException If the ExecutorService is not valid or has been shutdown.
-     <p>
-     This function attempts to gracefully shut down the ExecutorService by calling shutdown().
-     If the ExecutorService is not valid (i.e., it is null or has been shutdown),
-     a PublicLocalException is thrown with an appropriate error message.
-     <p>
-     If the shutdown is not immediate, the function waits for up to 5 seconds for the ExecutorService to terminate.
-     If the ExecutorService does not terminate within the specified time, it is forcefully shut down using shutdownNow().
-     <p>
-     The error message includes the current thread's ID and name,
-     as well as a suggestion to check the thread connection or initialize a new thread.
+     This function is responsible for shutting down the ExecutorService
+     and handling any exceptions that may occur during the shutdown process.
+     If the ExecutorService is not null and not shutdown,
+     it will attempt to gracefully shut down the ExecutorService by calling the shutdown() method.
+     If the ExecutorService does not terminate within 5 seconds,
+     it will be forcefully shut down using shutdownNow() and a PublicLocalException will be thrown.
+     If an InterruptedException occurs during the shutdown process, the ExecutorService will be forcefully shut down,
+     the current thread will be interrupted, and a PublicLocalException will be thrown.
+     @throws PublicLocalException If an exception occurs during the shutdown process.
      */
     public void shutdownThread() throws PublicLocalException{
         if(executorService!=null&&!executorService.isShutdown()){
@@ -74,14 +83,14 @@ public class ExecutorServiceGlobal{
                     executorService.shutdownNow();
                     throw new PublicLocalException("Check Thread ID :="+Thread.currentThread().getId()+"  Name := "+Thread.currentThread().getName(),"Thread was AwaitTermination");
                 }
-            }catch(InterruptedException e){
+            }catch(InterruptedException exception){
                 executorService.shutdownNow();
                 Thread.currentThread().interrupt();
-                throw new PublicLocalException("Check Thread ID :="+Thread.currentThread().getId()+"   Name := "+Thread.currentThread().getName(),"Thread was interrupted during shutdown");
+                throw new PublicLocalException("Check Thread ID :="+Thread.currentThread().getId()+"Name := "+Thread.currentThread().getName()+" ::  Exception  := "+exception.getMessage(),"Thread was interrupted during shutdown");
             }
         }
     }
     public ReentrantLock ReentrantLock(){
-        return this. reentrantLock;
+        return this.reentrantLock;
     }
 }

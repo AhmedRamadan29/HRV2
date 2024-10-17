@@ -39,4 +39,10 @@ public class UsersJoinSystemUsersService extends UserService implements UsersJoi
         CopyOnWriteArrayList<SystemUserDTO> Systemusers = this.systemUserRepository.findAll().stream().map(SystemUserMapper::systemUserToDTO).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
         return users.stream().flatMap(Users->Systemusers.stream().filter(System->System.getRole().equals(role)).map(B->UsersJoinSystemUsersDTO.builder().email(Users.getEmail()).isActivated(Users.isActivated()).createdDate(Users.getCreatedDate()).status(Users.isStatus()).role(B.getRole()).build())).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
     }
+
+
+
+
+
+
 }

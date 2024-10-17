@@ -1,6 +1,5 @@
 package HRComponents.AbstractionImp.CRUDImpService.CRUDImpServiceSingleEntity;
 import HRComponents.DTOs.EntitysDTOs.UserDTO;
-
 import java.util.Hashtable;
 import java.util.List;
 public interface CRUDUsersServiceMethod  {
