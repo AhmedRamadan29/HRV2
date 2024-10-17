@@ -1,16 +1,17 @@
-package HRComponents.DTOs.EntityDTOs;
+package HRComponents.DTOs.EntitysDTOs;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Builder
 @Component
-public class SystemUserDTO {
+public class EmployerDTO {
     private int id;
-    private String role;
-    private Integer PrivilegeRole;
+    private String companyName;
+    private String phone;
+    private String webSites;
 }

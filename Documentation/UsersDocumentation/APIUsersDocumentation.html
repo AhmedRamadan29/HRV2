@@ -182,9 +182,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     <h2>Service: UserService</h2>
     <pre><code>package HRComponents.Services;
 
-import HRComponents.DTOs.EntityDTOs.UserDTO;
+import HRComponents.DTOs.EntitysDTOs.UserDTO;
 import HRComponents.Entitys.Users;
-import HRComponents.Mappers.UserMapper;
+import HRComponents.Mappers.MappersEntityes.UserMapper;
 import HRComponents.Repostorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -229,8 +229,8 @@ public class UserService {
     <h2>Controller: UserController</h2>
     <pre><code>package HRComponents.Controllers;
 
-import HRComponents.DTOs.EntityDTOs.UserDTO;
-import HRComponents.Services.UserService;
+import HRComponents.DTOs.EntitysDTOs.UserDTO;
+import HRComponents.Services.ServiceSingleEntitys.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

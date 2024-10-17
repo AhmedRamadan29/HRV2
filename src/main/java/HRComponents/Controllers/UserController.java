@@ -1,23 +1,32 @@
 package HRComponents.Controllers;
-import HRComponents.DTOs.EntityDTOs.UserDTO;
-import HRComponents.FrontEndImplementation.PaginationImplement;
-import HRComponents.Services.UserService;
+import HRComponents.AbstractionImp.CRUDImpService.CRUDImpServiceJoinsEntitys.UsersJoinSystemUsersMethod;
+import HRComponents.DTOs.EntitysDTOs.UserDTO;
+import HRComponents.GlobalUseClass.CustomizedImplementationControllers.PaginationImplement;
+import HRComponents.Services.ServiceSingleEntitys.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/API/users")
 @CrossOrigin(origins = "*")
 public class UserController {
     private UserService userService;
+    private UsersJoinSystemUsersMethod UsersJoinSystemUsers;
     private PaginationImplement paginationImplement = PaginationImplement.getInstance();
     @Autowired
-    public UserController(UserService userService) {this.userService = userService;}
+    public UserController(UserService userService , UsersJoinSystemUsersMethod UsersJoinSystemUsers)
+    {this.userService = userService;
+    this. UsersJoinSystemUsers = UsersJoinSystemUsers;
+    }
     /**
      * Retrieves a paginated list of users.
      *
@@ -53,13 +62,13 @@ public class UserController {
  * @return A ResponseEntity containing a list of UserDTO objects for the specified private name, page, and page size.
  * If no users are found or the list is null, a ResponseEntity with a NOT_FOUND status is returned.
  */
-@GetMapping("/GetUsersByPrivate/{PrivateName}")
-public ResponseEntity<?> GetInfoUsersByPrivate(@PathVariable String PrivateName, @RequestParam(defaultValue = "0") long page, @RequestParam(defaultValue = "2") long pageSize) {
-    return new ResponseEntity<>(this.paginationImplement.createPagination(this.userService.getPrivate(PrivateName), page, pageSize), HttpStatus.FOUND);
+   @GetMapping("/GetUsersByPrivate/{PrivateName}")
+     public ResponseEntity<?> GetInfoUsersByPrivate(@PathVariable String PrivateName, @RequestParam(defaultValue = "0") long page, @RequestParam(defaultValue = "2") long pageSize) {
+    return new ResponseEntity<>(this.paginationImplement.createPagination(this.UsersJoinSystemUsers.getPrivate(PrivateName), page, pageSize), HttpStatus.FOUND);
 }
 
     @GetMapping("/GetInfoUsersRroles/{role}")
     public ResponseEntity<?>  getUserIsActive (@PathVariable String role, @RequestParam(defaultValue="0") long page, @RequestParam(defaultValue = "2") long pageSize) {
-        return  new ResponseEntity<>(this.paginationImplement. createPagination(this.userService.getUserIsActive(role), page, pageSize) , HttpStatus.FOUND);}
+        return  new ResponseEntity<>(this.paginationImplement. createPagination(this.UsersJoinSystemUsers.getUserIsActive(role), page, pageSize) , HttpStatus.FOUND);}
 
 }

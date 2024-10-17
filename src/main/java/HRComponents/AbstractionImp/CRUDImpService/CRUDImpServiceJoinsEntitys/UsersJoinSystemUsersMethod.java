@@ -1,4 +1,4 @@
-package HRComponents.AbstractionImp.CRUDImpService;
+package HRComponents.AbstractionImp.CRUDImpService.CRUDImpServiceJoinsEntitys;
 import HRComponents.DTOs.CoustomJoinTablesDTOs.UsersJoinSystemUsersDTO;
 
 import java.util.List;

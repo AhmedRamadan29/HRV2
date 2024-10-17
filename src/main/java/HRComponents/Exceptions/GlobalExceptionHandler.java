@@ -6,7 +6,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import javax.validation.ConstraintViolationException;
 import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
@@ -14,12 +13,18 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
+    /**
+ * Exception handler for MethodArgumentNotValidException. This exception is thrown when a method argument fails validation.
+ *
+ * @param ex The MethodArgumentNotValidException that occurred.
+ * @return A ResponseEntity containing a map of field errors and their corresponding messages, with a status code of BAD_REQUEST.
+ */
+@ExceptionHandler(MethodArgumentNotValidException.class)
+public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    Map<String, String> errors = new HashMap<>();
+    ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+}
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
         return new ResponseEntity<>("Not found Data", HttpStatus.NOT_FOUND);

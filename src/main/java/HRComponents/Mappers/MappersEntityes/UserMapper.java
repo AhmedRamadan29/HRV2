@@ -1,5 +1,5 @@
-package HRComponents.Mappers;
-import HRComponents.DTOs.EntityDTOs.UserDTO;
+package HRComponents.Mappers.MappersEntityes;
+import HRComponents.DTOs.EntitysDTOs.UserDTO;
 import HRComponents.Entitys.Users;
 import org.springframework.stereotype.Component;
 @Component
