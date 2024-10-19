@@ -30,6 +30,6 @@ public class JobSeeker {
     @Column(name = "info_about_job_seeker")
     private String info;
     @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "EmpId" , referencedColumnName = "id")
+    @JoinColumn(name = "emp_id" , referencedColumnName = "id")
    private  Employer employer;
 }

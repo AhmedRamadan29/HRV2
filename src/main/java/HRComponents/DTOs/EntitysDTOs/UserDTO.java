@@ -1,4 +1,5 @@
 package HRComponents.DTOs.EntitysDTOs;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,8 +15,12 @@ import java.util.Date;
 public class UserDTO {
     private int id;
     private String email;
+    @JsonIgnore
     private String password;
     private Date createdDate;
     private boolean status;
     private boolean isActivated;
+    private  int PrivilegeId;
+
+
 }

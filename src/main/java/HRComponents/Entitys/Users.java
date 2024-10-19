@@ -1,4 +1,5 @@
 package HRComponents.Entitys;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ public class Users {
     private int id;
     @Column(name = "email")
     private String email;
+    @JsonIgnore
     @Column(name = "password")
     private String password;
     @Column(name = "createddate")
@@ -26,6 +28,8 @@ public class Users {
     private boolean status;
     @Column(name = "isactivated")
     private boolean isActivated;
+    @Column(name = "Privilege_id")
+    private int privilegeId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Privilege_id", referencedColumnName = "Privilege_Role_id", insertable = false, updatable = false)
     private SystemUser SystemUser;

@@ -6,6 +6,6 @@ public class PublicLocalException extends Exception{
      @param ExceptionMessage the detailed message of the exception
      */
     public PublicLocalException(String ExceptionMessageClass,String ExceptionMessage){
-        super(ExceptionMessageClass+"::=-->"+ExceptionMessage);
+        super(ExceptionMessageClass+"::=------------->"+ExceptionMessage);
     }
 }

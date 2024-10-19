@@ -2,7 +2,8 @@ package HRComponents.AbstractionImp.CRUDImpService.CRUDImpServiceJoinsEntitys;
 import HRComponents.DTOs.CoustomJoinTablesDTOs.JobSeekerJoinEmployerDTO;
 import HRComponents.Exceptions.PublicLocalException;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 public interface JobSeekerJoinEmployerServiceMethod{
-    CopyOnWriteArrayList<JobSeekerJoinEmployerDTO> getAll() throws PublicLocalException, InterruptedException;
+List<JobSeekerJoinEmployerDTO> getAll() throws InterruptedException, PublicLocalException, ExecutionException;
 }

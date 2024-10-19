@@ -11,7 +11,9 @@ public class UserMapper {
      * @return a UserDTO object containing the data from the Users entity
      */
     public static UserDTO toDTO(Users users) {
-        return UserDTO.builder().id(users.getId()).email(users.getEmail()).password(users.getPassword()).createdDate(users.getCreatedDate()).status(users.isStatus()).isActivated(users.isActivated()).build();
+        return UserDTO.builder().id(users.getId()).email(users.getEmail()).password(users.getPassword()).createdDate(users.getCreatedDate()).status(users.isStatus()).isActivated(users.isActivated())
+
+                .PrivilegeId(users.getPrivilegeId()).build();
     }
     /**
      * Converts a UserDTO to a Users entity.
@@ -20,7 +22,7 @@ public class UserMapper {
      * @return a Users entity containing the data from the UserDTO
      */
     public static Users toEntity(UserDTO userDTO) {
-        return Users.builder().id(userDTO.getId()).email(userDTO.getEmail()).password(userDTO.getPassword()).createdDate(userDTO.getCreatedDate()).status(userDTO.isStatus()).isActivated(userDTO.isActivated()).build();
+        return Users.builder().id(userDTO.getId()).email(userDTO.getEmail()).password(userDTO.getPassword()).createdDate(userDTO.getCreatedDate()).status(userDTO.isStatus()).isActivated(userDTO.isActivated()).privilegeId(userDTO.getPrivilegeId()).build();
     }
 
 

@@ -13,6 +13,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
+/**
+ * Exception handler for MethodArgumentNotValidException. This exception is thrown when a method argument fails validation.
+ *
+ * @param ex The MethodArgumentNotValidException that occurred.
+ * @return A ResponseEntity containing a map of field errors and their corresponding messages, with a status code of BAD_REQUEST.
+ */
 @ExceptionHandler(MethodArgumentNotValidException.class)
 public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
     Map<String, String> errors = new HashMap<>();
