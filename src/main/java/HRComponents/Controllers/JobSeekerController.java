@@ -1,7 +1,7 @@
 package HRComponents.Controllers;
 import HRComponents.AbstractionImp.CRUDImpService.CRUDImpServiceJoinsEntitys.JobSeekerJoinEmployerServiceMethod;
 import HRComponents.Exceptions.PublicLocalException;
-import HRComponents.GlobalUseClass.CustomizedImplementationControllers.PaginationImplement;
+import HRComponents.GlobalProjectPattern.CustomizedImplementationControllers.PaginationImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package HRComponents.GlobalUseClass.RunnableThreadsGlobal;
+package HRComponents.GlobalProjectPattern.RunnableThreadsGlobal;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutorService;

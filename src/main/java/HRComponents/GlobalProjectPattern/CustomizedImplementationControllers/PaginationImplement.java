@@ -1,4 +1,4 @@
-package HRComponents.GlobalUseClass.CustomizedImplementationControllers;
+package HRComponents.GlobalProjectPattern.CustomizedImplementationControllers;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
