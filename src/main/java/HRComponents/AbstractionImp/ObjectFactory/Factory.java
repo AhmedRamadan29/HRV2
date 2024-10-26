@@ -1,0 +1,8 @@
+package HRComponents.AbstractionImp.ObjectFactory;
+import HRComponents.AbstractionImp.CRUDImpService.CRUDImpServiceJoinsEntitys.UsersJoinSystemUsersMethod;
+import HRComponents.AbstractionImp.CRUDImpService.CRUDImpServiceSingleEntity.CRUDUsersServiceMethod;
+public abstract  class Factory{
+protected abstract CRUDUsersServiceMethod crudUsersServiceMethod();
+protected  abstract UsersJoinSystemUsersMethod usersJoinSystemUsersMethod();
+
+}

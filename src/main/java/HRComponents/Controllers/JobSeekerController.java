@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.concurrent.ExecutionException;
 @RestController
 @RequestMapping("/api/JobSeeker")
@@ -19,7 +18,8 @@ public class JobSeekerController{
     private JobSeekerJoinEmployerServiceMethod jobSeekerJoinEmployerServiceMethod;
     private  final PaginationImplement paginationImplement;
     @Autowired
-    public JobSeekerController(JobSeekerJoinEmployerServiceMethod jobSeekerJoinEmployerServiceMethod , PaginationImplement paginationImplement){this.jobSeekerJoinEmployerServiceMethod=jobSeekerJoinEmployerServiceMethod;this.paginationImplement=paginationImplement;}
+    public JobSeekerController(JobSeekerJoinEmployerServiceMethod jobSeekerJoinEmployerServiceMethod ,
+                               PaginationImplement paginationImplement){this.jobSeekerJoinEmployerServiceMethod=jobSeekerJoinEmployerServiceMethod;this.paginationImplement=paginationImplement;}
     
     
     /**
@@ -39,5 +39,10 @@ public ResponseEntity<?> getAllJobSeekerAndEmployer(@RequestParam(defaultValue="
                                                    @RequestParam(defaultValue="1") long pageSize) throws ExecutionException, InterruptedException, PublicLocalException {
     return new ResponseEntity<>(this.paginationImplement.createPagination(this.jobSeekerJoinEmployerServiceMethod.getAll(), page, pageSize), HttpStatus.FOUND);
 }
+
+
+
+
+
     }
 

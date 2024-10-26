@@ -5,5 +5,6 @@ import HRComponents.Exceptions.PublicLocalException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 public interface JobSeekerJoinEmployerServiceMethod{
-List<JobSeekerJoinEmployerDTO> getAll() throws InterruptedException, PublicLocalException, ExecutionException;
+    List<JobSeekerJoinEmployerDTO> getAll() throws InterruptedException, PublicLocalException, ExecutionException;
+    List<JobSeekerJoinEmployerDTO> updateAll();
 }

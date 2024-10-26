@@ -7,6 +7,8 @@ import HRComponents.Mappers.JoinImplelementathionsMappers.JobSeekerJoinEmployerM
 import HRComponents.Repostorys.EmployerDaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
@@ -17,25 +19,26 @@ public class JobSeekerJoinEmployerService implements JobSeekerJoinEmployerServic
     private ExecutorService executorServicewoman;
     private CopyOnWriteArrayList<JobSeekerJoinEmployerDTO> jobSeekerJoinEmployerDTOS;
     @Autowired
-    public JobSeekerJoinEmployerService(EmployerDaoRepository employerDaoRepository,ExecutorServiceGlobal executorService){this.executorService=executorService;this.employerDaoRepository=employerDaoRepository;}
+    public JobSeekerJoinEmployerService(EmployerDaoRepository employerDaoRepository,ExecutorServiceGlobal executorService){
+        this.executorService=executorService;
+        this.employerDaoRepository=employerDaoRepository;
+    }
     @Override
-    public CopyOnWriteArrayList<JobSeekerJoinEmployerDTO> getAll() throws PublicLocalException {
-        this.executorService = new ExecutorServiceGlobal(3);
-        try {
-
+    public CopyOnWriteArrayList<JobSeekerJoinEmployerDTO> getAll() throws PublicLocalException{
+        this.executorService=new ExecutorServiceGlobal(3);
+        try{
             executorService.executeTask(this::run);
-        } catch (Exception e) {
-            throw new PublicLocalException("Error executing task", e.toString());
+        }catch(
+         Exception e){
+            throw new PublicLocalException("Error executing task",e.toString());
         }
         return jobSeekerJoinEmployerDTOS;
     }
-
-
-    private void run() {
-
-        jobSeekerJoinEmployerDTOS = employerDaoRepository.getAll()
-                .stream()
-                .map(JobSeekerJoinEmployerMapper::JobSeekerJoinEmployerToDTO)
-                .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+    @Override
+    public List<JobSeekerJoinEmployerDTO> updateAll(){
+        return List.of();
+    }
+    private void run(){
+        jobSeekerJoinEmployerDTOS=employerDaoRepository.getAll().stream().map(JobSeekerJoinEmployerMapper::JobSeekerJoinEmployerToDTO).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
     }
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotNull;
 @Data
 @Table(name = "employers")
@@ -14,9 +15,9 @@ import javax.validation.constraints.NotNull;
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "jobs"})
 public class Employer {
-    @Id
+@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+@Column(name = "id")
     private int id;
     @NotNull
     @Column(name = "companyname")
