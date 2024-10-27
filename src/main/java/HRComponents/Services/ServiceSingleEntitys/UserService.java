@@ -22,7 +22,8 @@ public class UserService implements CRUDUsersServiceMethod{
     }
     /**
      Retrieves all users from the system.
-     This method fetches all user entities from the database, converts them to UserDTO objects,
+     This method fetches all user entities from the database,
+     converts them to UserDTO objects,
      and returns the result as a CopyOnWriteArrayList.
      The method uses a parallel stream for potential performance improvements in a multithreaded environment.
      @return a CopyOnWriteArrayList of UserDTO objects representing all users in the system
