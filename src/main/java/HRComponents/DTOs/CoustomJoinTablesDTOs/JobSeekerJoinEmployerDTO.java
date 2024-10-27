@@ -10,6 +10,15 @@ import org.springframework.stereotype.Component;
 @Builder
 @Component
 public class JobSeekerJoinEmployerDTO{
+    public JobSeekerJoinEmployerDTO(String firstName,String lastName,String githubAccount,String linkedInAccount,String info,String phone,String webSites){
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.githubAccount=githubAccount;
+        this.linkedInAccount=linkedInAccount;
+        this.info=info;
+        this.phone=phone;
+        this.webSites=webSites;
+    }
     private String firstName;
     private String lastName;
     private int birthDate;

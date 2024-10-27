@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 @Service
 public class EmployerService implements EmployerMethod{
-    protected EmployerDaoRepository employerDaoRepository;
+private final EmployerDaoRepository employerDaoRepository;
     @Autowired
     private EmployerService(EmployerDaoRepository employerDaoRepository){this.employerDaoRepository=employerDaoRepository;}
     /**
