@@ -1,11 +1,10 @@
 package HRComponents.DTOs.CoustomJoinTablesDTOs;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -14,17 +13,15 @@ import java.time.LocalDate;
 public class ReportGetAllInfoUserDTO{
     private String firstName;
     private String lastName;
-    private LocalDate birthDate;
-    private Integer age;
-    private String nationalityId;
+    private int birthDate;
     private String position;
     private String githubAccount;
     private String linkedinAccount;
     private String email;
-    private String status;
+    private boolean status;
     private String createdDate;
     private String company;
-    private String privilege;
+    @JsonIgnore private String privilege;
     private String website;
     private String phoneNumber;
 }

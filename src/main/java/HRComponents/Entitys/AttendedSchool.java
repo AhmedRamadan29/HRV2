@@ -10,21 +10,11 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "attended_schools")
-public class AttendedSchool {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @ManyToOne()
-    @JoinColumn(name = "school_id")
-    private School school;
-    @ManyToOne()
-    @JoinColumn(name = "job_seeker_id")
-    @JsonIgnore
-    private JobSeeker jobSeeker;
-    @Column(name = "startingDateOfUniversity")
-    private Date dateOfStarting;
-    @Column(name = "graduationDateOfUniversity")
-    private Date dateOfGraduation;
+@Table(name="attended_schools")
+public class AttendedSchool{
+    @Id @Column(name="id") @GeneratedValue(strategy=GenerationType.IDENTITY) private int id;
+    @ManyToOne() @JoinColumn(name="school_id") private School school;
+    @ManyToOne() @JoinColumn(name="job_seeker_id") @JsonIgnore private JobSeeker jobSeeker;
+    @Column(name="startingDateOfUniversity") private Date dateOfStarting;
+    @Column(name="graduationDateOfUniversity") private Date dateOfGraduation;
 }

@@ -3,10 +3,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 @Component
 public class PaginationImplement<T> implements Cloneable{
-    private static PaginationImplement paginationImplement=null;
+    private static PaginationImplement pagination_Implement=null;
     private PaginationImplement(){
     }
     /**
@@ -14,11 +13,11 @@ public class PaginationImplement<T> implements Cloneable{
      @param <T> the type of elements in the pagination
      @return a singleton instance of PaginationImplement for the specified type
      */
-
     public static <T> PaginationImplement<T> getInstance(){
-        if(paginationImplement==null)
-            paginationImplement=new PaginationImplement<>();
-        return (PaginationImplement<T>)paginationImplement;
+        if(pagination_Implement==null){
+            pagination_Implement=new PaginationImplement<>();
+        }
+        return pagination_Implement;
     }
     /**
      Paginates a list by returning a sublist corresponding to the specified page and page size.
@@ -26,21 +25,21 @@ public class PaginationImplement<T> implements Cloneable{
      @param page the zero-based page index to retrieve
      @param pageSize the number of items per page
      @return a sublist of the original list representing the specified page
-     @throws NoSuchElementException if the list is null or empty
+     @exception NoSuchElementException if the list is null or empty
      */
     private List<T> paginate(List<T> list,long page,long pageSize){
-        if(list==null||list.isEmpty())
+        if(list==null||list.isEmpty()){
             throw new NoSuchElementException("The page is empty or null");
-        return list.stream().skip(page*pageSize).limit(pageSize).collect(Collectors.toList());
+        }
+        return list.stream().skip(page*pageSize).limit(pageSize).toList();
     }
     /**
      Overrides the clone method to provide a deep copy of the PaginationImplement object.
      This method is necessary to maintain the singleton pattern
      and prevent unintended modifications to the shared instance.
      @return a deep copy of the PaginationImplement object
-     @throws CloneNotSupportedException if the object's class does not support the Cloneable interface
+     @exception CloneNotSupportedException if the object's class does not support the Cloneable interface
      */
-
     @Override
     protected PaginationImplement<T> clone() throws CloneNotSupportedException{
         return (PaginationImplement<T>)super.clone();

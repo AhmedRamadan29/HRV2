@@ -7,8 +7,9 @@ import HRComponents.Repostorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Hashtable;
+
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 @Service
@@ -43,7 +44,7 @@ public class UserService implements CRUDUsersServiceMethod{
     @Override
     @Transactional
     public List<UserDTO> create(List<UserDTO> users){
-        return this.userRepository.saveAll(users.parallelStream().map(UserMapper::toEntity).collect(Collectors.toList())).stream().map(UserMapper::toDTO).collect(Collectors.toList());
+        return this.userRepository.saveAll(users.parallelStream().map(UserMapper::toEntity).toList()).stream().map(UserMapper::toDTO).toList();
     }
     /**
      Updates a set of users in the system based on their IDs and corresponding UserDTO objects.
@@ -55,7 +56,7 @@ public class UserService implements CRUDUsersServiceMethod{
      */
     @Transactional
     @Override
-    public Hashtable<Integer,UserDTO> UpdateUser(List<Integer> id,Hashtable<Integer,UserDTO> userDTO){
+    public ConcurrentMap<Integer,UserDTO> UpdateUser(List<Integer> id,ConcurrentMap<Integer,UserDTO> userDTO){
         id.forEach(ID->{
             UserDTO user=userDTO.get(ID);
             if(user!=null){

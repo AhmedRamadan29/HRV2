@@ -7,12 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "departments")
-public class Department {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(name = "department_name")
-    private String departmentName;
+@Table(name="departments")
+public class Department{
+    @Id @Column(name="id") @GeneratedValue(strategy=GenerationType.IDENTITY) private int id;
+    @Column(name="department_name") private String departmentName;
 }

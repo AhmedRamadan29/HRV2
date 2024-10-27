@@ -10,15 +10,9 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "work_time")
-public class WorkTime {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-    @Column(name = "work_time_name")
-    private String workTimeName;
-    @JsonIgnore
-    @OneToMany(mappedBy = "workTime")
-    private List<Job> jobs;
+@Table(name="work_time")
+public class WorkTime{
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY) @Column(name="id") private int id;
+    @Column(name="work_time_name") private String workTimeName;
+    @JsonIgnore @OneToMany(mappedBy="workTime") private List<Job> jobs;
 }

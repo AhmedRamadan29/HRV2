@@ -11,17 +11,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 @Repository
-public interface UserRepository extends JpaRepository<Users,Integer>, UsersJoinSystemUsersImplementations  , UsersImplementations{
-    @Query("SELECT new HRComponents.DTOs.CoustomJoinTablesDTOs.UsersJoinSystemUsersDTO" + "(A.email, A.createdDate, A.password, A.isActivated, A.status, B.role) " + "FROM Users A JOIN A.SystemUser B WHERE B.role = :roleName")
+public interface UserRepository extends JpaRepository<Users,Integer>, UsersJoinSystemUsersImplementations, UsersImplementations{
+    @Query("SELECT new HRComponents.DTOs.CoustomJoinTablesDTOs.UsersJoinSystemUsersDTO"+"(A.email, A.createdDate, A.password, A.isActivated, A.status, B.role) "+"FROM Users A JOIN A.SystemUser B WHERE B.role = :roleName")
     @Override
     List<UsersJoinSystemUsersDTO> findUsersWithRole(@Param("roleName") String roleName);
     @Modifying
     @Transactional
-    @Query(value = "UPDATE  UserDTO SET isActivated = :#{#userDTO.isActivated}, status = :#{#userDTO.status}, email = :#{#userDTO.email}, password = :#{#userDTO.password} WHERE id = :#{#userDTO.id}", nativeQuery = true)
+    @Query(value="UPDATE  UserDTO SET isActivated = :#{#userDTO.isActivated}, status = :#{#userDTO.status}, email = :#{#userDTO.email}, password = :#{#userDTO.password} WHERE id = :#{#userDTO.id}", nativeQuery=true)
     @Override
-    void UpdateAll(@Param("userDTO") Hashtable<Integer, UserDTO> userDTO);
+    void UpdateAll(@Param("userDTO") ConcurrentMap<Integer,UserDTO> userDTO);
 }
 

@@ -25,6 +25,7 @@ public class ReportsUsersInfoService implements ReportsServiceMethod{
      */
     @Override
     public CopyOnWriteArrayList<ReportGetAllInfoUserDTO> findUsersReport(String Privilege) throws PublicLocalException{
-        return Try.of(()->forkBoolTreed.CreateFork(3).submit(()->jobSeekerRepository.reportGetAllInfoUsers(Privilege).parallelStream().map(ReportGetAllInfoMapper::convertToDTO).collect(Collectors.toCollection(CopyOnWriteArrayList::new))).join()).getOrElseThrow(ReaderEX->new PublicLocalException("Error while fetching ReportGetAllInfoUserDTO",ReaderEX.getMessage()));
+        return Try.of(()->forkBoolTreed.CreateFork(2).submit(()->jobSeekerRepository.reportInfoUsers(Privilege).parallelStream().map(ReportGetAllInfoMapper::convertToDTO)
+         .collect(Collectors.toCollection(CopyOnWriteArrayList::new))).join()).getOrElseThrow(ReaderEX->new PublicLocalException("Error while fetching ReportGetAllInfoUserDTO",ReaderEX.getMessage()));
     }
 }

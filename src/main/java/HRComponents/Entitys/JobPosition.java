@@ -9,21 +9,13 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 @Data
 @Entity
-@Table(name = "job_positions")
+@Table(name="job_positions")
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "jobs", "jobSeekers", "workExperiences"})
-public class JobPosition {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-    @Column(name = "position_name")
-    private String position_name;
-    @OneToMany(mappedBy = "jobPosition")
-    @JsonIgnore
-    private List<Job> jobs;
-    @OneToMany(mappedBy = "jobPosition")
-    @JsonIgnore
-    private List<WorkExperience> workExperiences;
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","jobs","jobSeekers","workExperiences"})
+public class JobPosition{
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY) @Column(name="id") private int id;
+    @Column(name="position_name") private String position_name;
+    @OneToMany(mappedBy="jobPosition") @JsonIgnore private List<Job> jobs;
+    @OneToMany(mappedBy="jobPosition") @JsonIgnore private List<WorkExperience> workExperiences;
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 @RestController
 @RequestMapping("/API/users")
@@ -23,8 +24,7 @@ public class UserController{
     private UsersJoinSystemUsersMethod UsersJoinSystemUsers;
     private final PaginationImplement paginationImplement;
     @Autowired
-    public UserController(CRUDUsersServiceMethod userService,UsersJoinSystemUsersMethod UsersJoinSystemUsers,PaginationImplement paginationImplement){
-    this.CRUDUsersServiceMethod=userService;this.UsersJoinSystemUsers=UsersJoinSystemUsers;this.paginationImplement=paginationImplement;}
+    public UserController(CRUDUsersServiceMethod userService,UsersJoinSystemUsersMethod UsersJoinSystemUsers,PaginationImplement paginationImplement){this.CRUDUsersServiceMethod=userService;this.UsersJoinSystemUsers=UsersJoinSystemUsers;this.paginationImplement=paginationImplement;}
     /**
      Retrieves a paginated list of users.
      @param page The page number to retrieve (default is 0).
@@ -32,10 +32,8 @@ public class UserController{
      @return A ResponseEntity containing a list of UserDTO objects for the specified page and page size.
      If no users are found or the list is null, a ResponseEntity with a NOT_FOUND status is returned.
      */
-    /*Done*/
     @GetMapping("/GetAllUsers")
-    public ResponseEntity<?> getallUsers(@RequestParam(defaultValue="0") long page,@RequestParam(defaultValue="10") long pageSize){
-    return new ResponseEntity<>(this.paginationImplement.createPagination(this.CRUDUsersServiceMethod.getAll(),page,pageSize),HttpStatus.FOUND);}
+    public ResponseEntity<?> getallUsers(@RequestParam(defaultValue="0") long page,@RequestParam(defaultValue="10") long pageSize){return new ResponseEntity<>(this.paginationImplement.createPagination(this.CRUDUsersServiceMethod.getAll(),page,pageSize),HttpStatus.OK);}
     /**
      Adds a list of users to the system.
      @param users A list of UserDTO objects representing the users to be added.
@@ -43,14 +41,10 @@ public class UserController{
      @return A ResponseEntity containing the list of created UserDTO objects with a CREATED status.
      If the input list is null or empty, a ResponseEntity with a BAD_REQUEST status is returned.
      */
-    /*Done*/
     @PostMapping("/AddUsers")
-    public ResponseEntity<List<UserDTO>> addUsers(@RequestBody List<UserDTO> users){
-        if(users==null||users.isEmpty())
+    public ResponseEntity<List<UserDTO>> addUsers(@RequestBody List<UserDTO> users){if(users==null||users.isEmpty()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(this.CRUDUsersServiceMethod.create(users),HttpStatus.CREATED);
-    }
-    /*Done*/
+        }return new ResponseEntity<>(this.CRUDUsersServiceMethod.create(users),HttpStatus.CREATED);}
     /**
      Retrieves a paginated list of users based on their private name.
      @param PrivateName The private name of the users to retrieve.
@@ -60,10 +54,7 @@ public class UserController{
      If no users are found or the list is null, a ResponseEntity with a NOT_FOUND status is returned.
      */
     @GetMapping("/GetUsersByPrivate/{PrivateName}")
-    public ResponseEntity<?> GetInfoUsersByPrivate(@PathVariable String PrivateName,@RequestParam(defaultValue="0") long page,@RequestParam(defaultValue="2") long pageSize){
-        return new ResponseEntity<>(this.paginationImplement.createPagination(this.UsersJoinSystemUsers.getPrivate(PrivateName),page,pageSize),HttpStatus.FOUND);
-    }
-    /*Done*/
+    public ResponseEntity<?> GetInfoUsersByPrivate(@PathVariable String PrivateName,@RequestParam(defaultValue="0") long page,@RequestParam(defaultValue="2") long pageSize){return new ResponseEntity<>(this.paginationImplement.createPagination(this.UsersJoinSystemUsers.getPrivate(PrivateName),page,pageSize),HttpStatus.OK);}
     /**
      Retrieves a paginated list of users based on their role and their active status.
      @param role The role of the users to retrieve.
@@ -73,7 +64,5 @@ public class UserController{
      If no users are found or the list is null, a ResponseEntity with a NOT_FOUND status is returned.
      */
     @GetMapping("/GetInfoUsersRroles/{role}")
-    public ResponseEntity<?> getUserIsActive(@PathVariable String role,@RequestParam(defaultValue="0") long page,@RequestParam(defaultValue="3") long pageSize){
-        return new ResponseEntity<>(this.paginationImplement.createPagination(this.UsersJoinSystemUsers.getUserIsActive(role),page,pageSize),HttpStatus.FOUND);
-    }
+    public ResponseEntity<?> getUserIsActive(@PathVariable String role,@RequestParam(defaultValue="0") long page,@RequestParam(defaultValue="3") long pageSize){return new ResponseEntity<>(this.paginationImplement.createPagination(this.UsersJoinSystemUsers.getUserIsActive(role),page,pageSize),HttpStatus.OK);}
 }
